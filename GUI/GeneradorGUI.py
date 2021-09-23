@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         button = QPushButton("Maquina")
         button.clicked.connect(self.openFileNameDialog)
 
-        button2 = QPushButton("Procesos")
+        button2 = QPushButton("Simulacion")
         button2.clicked.connect(self.openFileNamesDialog)
 
         label3 = QLabel("Productos para simular")

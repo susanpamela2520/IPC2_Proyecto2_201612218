@@ -1,5 +1,7 @@
 from GUI.GeneradorGUI import GenerarGUI
 from TDA.Cola import Cola
+from TDA.ListaDobleEnlazada import ListaDobleEnlazada
+from TDA.Matriz import Matriz
 from TDA.Pila import Pila
 from XML.Lector import Lector
 
@@ -19,8 +21,23 @@ def testLeerXML():
     print(ROOT_DIR)
     lector = Lector(ROOT_DIR + "/ArchivosDePrueba/archivo1.xml", Lector.TYPE_MAQUINA)
 
+def testLindaDoble():
+    fila = ListaDobleEnlazada()
+    fila.agregar("a")
+    fila.agregar("b")
+    fila.agregar("c")
+    fila.agregar("d")
+    fila.recorrerAlreves()
+
+def testMatrix():
+    matriz = Matriz()
+    matriz.insertar(3, 2, "a")
+    matriz.insertar(3, 3, "b")
+    matriz.insertar(4, 4, "d")
+    matriz.insertar(2, 5, "c")
+    matriz.imprimir()
 
 if __name__ == '__main__':
-    GenerarGUI()
-
+    # GenerarGUI()
+    testMatrix()
 

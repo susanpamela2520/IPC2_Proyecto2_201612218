@@ -1,6 +1,5 @@
-class Celda:
-    def __init__(self, valor, x = 0, y = 0):
-        self.valor = valor
+class NodoCabecera:
+    def __init__(self, x = 0, y = 0):
         self.arriba = None
         self.abajo = None
         self.siguiente = None
