@@ -1,3 +1,5 @@
+import graphviz
+
 class MetodosCompartidos:
     def estaVacia(self):
         return self._inicio is None
@@ -18,3 +20,20 @@ class MetodosCompartidos:
         temp = self._inicio
         self._inicio = self._inicio.siguiente
         return temp.valor
+
+    def graficar(self):
+        print(self.__class__.__name__)
+        dot = graphviz.Digraph(comment=self.__class__.__name__, format='png')
+        dot.attr(rankdir='LR')
+        dot.attr('node', shape='box')
+        temp = self._inicio
+        counter = 0
+        while temp is not None:
+            dot.node(str(counter), str(temp.valor))
+            temp = temp.siguiente
+            if temp is not None:
+                dot.edge(str(counter), str(counter + 1))
+
+            counter += 1
+
+        dot.view('./graficas/'+self.__class__.__name__)

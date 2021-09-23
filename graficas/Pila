@@ -1,0 +1,10 @@
+// Pila
+digraph {
+	rankdir=LR
+	node [shape=box]
+	0 [label=3]
+	0 -> 1
+	1 [label=2]
+	1 -> 2
+	2 [label=1]
+}

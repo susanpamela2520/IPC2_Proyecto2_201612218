@@ -1,9 +1,9 @@
 import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
 
 
 class GenerarGUI:
     def __init__(self):
-        from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
         app = QApplication(sys.argv)
         w = QWidget()
         w.resize(500, 500)
