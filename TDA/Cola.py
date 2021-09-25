@@ -17,4 +17,6 @@ class Cola(MetodosCompartidos):
 
         temp.siguiente = Celda(valor)
 
+    def obtenerInicio(self):
+        return self._inicio
 

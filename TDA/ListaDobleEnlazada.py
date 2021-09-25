@@ -14,9 +14,7 @@ class ListaDobleEnlazada:
             self._inicio.x = 0
             return
 
-        # contador += 1
         while temp.siguiente is not None:
-            # print("temp x ", temp.x)
             temp = temp.siguiente
 
         nuevo.x = int(temp.x) + 1
@@ -24,16 +22,13 @@ class ListaDobleEnlazada:
         nuevo.anterior = temp
 
     def obtener(self, index):
-        tamanio = self.tamanio()
-        # print(tamanio, index)
+        tamanio = self.size()
         if tamanio <= index:
             for i in range(0, index - tamanio + 1):
                 self.agregar()
 
         temp = self._inicio
-        # print('find temp with index ',index)
         while temp is not None:
-            # print(temp.x, index)
             if temp.x == index:
                 return temp
 
@@ -47,7 +42,7 @@ class ListaDobleEnlazada:
             print("" + str(temp.x))
             temp = temp.siguiente
 
-    def tamanio(self):
+    def size(self):
         contador = 0
         temp = self._inicio
         while temp is not None:

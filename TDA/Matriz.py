@@ -53,12 +53,11 @@ class Matriz:
         return None
 
     def imprimir(self):
-        i = self._filas.tamanio()
-        j = self._columnas.tamanio()
+        i = self._filas.size()
+        j = self._columnas.size()
         for k in range(0, j):
             fila = ""
             for l in range(0, i):
-                # print('obtener en ',l,k)
                 nodo = self._obtener(l, k)
                 if nodo is None:
                     fila += " 0 "

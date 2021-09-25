@@ -34,10 +34,9 @@ def testMatrix():
     matriz.insertar(3, 2, "a")
     matriz.insertar(3, 3, "b")
     matriz.insertar(4, 4, "d")
-    matriz.insertar(2, 5, "c")
+    matriz.insertar(0, 1, "c")
     matriz.imprimir()
 
 if __name__ == '__main__':
-    # GenerarGUI()
-    testMatrix()
+    GenerarGUI()
 

@@ -1,18 +1,23 @@
 import sys
 import os
+import re
+
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout, QWidget, QLabel, QComboBox, \
-    QListWidget, QFileDialog
-
+    QListWidget, QFileDialog, QTableWidget
 
 # Subclass QMainWindow to customize your application's main window
+from TDA.Matriz import Matriz
 from XML.Lector import Lector
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self._draw()
+        self._matriz = Matriz()
 
+    def _draw(self):
         self.setWindowTitle("IPC2")
 
         layout = QGridLayout()
@@ -29,10 +34,14 @@ class MainWindow(QMainWindow):
         self.productos = QComboBox()
         # self.productos.addItems(["One", "Two", "Three"])
 
-
         label4 = QLabel("Componentes")
         self.componentes = QListWidget()
         # self.componentes.addItems(["One", "Two", "Three"])
+
+        self.tableWidget = QTableWidget()
+        self.tableWidget.setRowCount(4)
+        self.tableWidget.setColumnCount(2)
+        self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
 
         layout.addWidget(label, 1, 0)
         layout.addWidget(button, 1, 1)
@@ -41,6 +50,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.productos, 2, 1)
         layout.addWidget(label4, 3, 0)
         layout.addWidget(self.componentes, 3, 1)
+        layout.addWidget(self.tableWidget, 3, 2)
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -51,14 +61,11 @@ class MainWindow(QMainWindow):
 
         # self.setFixedSize(QSize(400, 300))
 
-    def the_button_was_clicked(self):
-        print("Clicked!")
-
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         file, _ = QFileDialog.getOpenFileName(self, "Elige un archivo", "",
-                                                  "XML Files (*.xml)", options=options)
+                                              "XML Files (*.xml)", options=options)
         if file:
             print(file)
             self.leerArchivos(file, Lector.TYPE_MAQUINA)
@@ -69,12 +76,36 @@ class MainWindow(QMainWindow):
         files, _ = QFileDialog.getOpenFileNames(self, "Elige uno o mas archivos", "",
                                                 "XML Files (*.xml)", options=options)
         if files:
-            print(files)
             for file in files:
                 self.leerArchivos(file, Lector.TYPE_SIMULACION)
 
     def leerArchivos(self, file, file_type):
         lector = Lector(file, file_type)
+        data = lector.leer()
+        # print(data)
+        self.llenarGUI(data.obtener('products'))
+
+    def llenarGUI(self, productos):
+        product = productos.valor.obtenerInicio()
+        while product is not None:
+            self.productos.addItem(product.valor.obtener('nombre').valor)
+            self._parseElaboracionAGUI(product.valor.obtener('elaboracion'))
+            product = product.siguiente
+
+    def _parseElaboracionAGUI(self, elaboracion):
+        paso = elaboracion.valor
+        filtro_lineas = re.compile(r'L\d+p?')
+        lineas = filtro_lineas.findall(paso)
+
+        filtro_componentes = re.compile(r'C\d+p?')
+        componentes = filtro_componentes.findall(paso)
+
+        self.componentes.addItems(componentes)
+
+    def _llenarMatriz(self, elaboracion):
+        # for item in elaboracion:
+        pass
+
 
 class GenerarGUI:
     def __init__(self):
@@ -84,4 +115,3 @@ class GenerarGUI:
         window.show()
 
         app.exec()
-
