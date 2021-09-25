@@ -4,7 +4,7 @@ import re
 
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout, QWidget, QLabel, QComboBox, \
-    QListWidget, QFileDialog, QTableWidget, QTableWidgetItem, QHeaderView
+    QListWidget, QFileDialog, QTableWidget, QTableWidgetItem, QHeaderView, QErrorMessage, QMessageBox
 
 # Subclass QMainWindow to customize your application's main window
 from Convertidor.Convertidor import Convertidor
@@ -72,14 +72,26 @@ class MainWindow(QMainWindow):
 
         # self.setFixedSize(QSize(900, 300))
 
+    def _mostrarError(self, mensaje):
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Error")
+        dlg.setText(mensaje)
+        button = dlg.exec()
+
     def iniciarSimulacion(self):
         text = str(self.productos.currentText())
         product = self._productos.obtener(text)
+        if product is None:
+            self._mostrarError("Seleccion un producto")
+            return
         self._parseElaboracionAGUI(product.valor.obtener('elaboracion'))
 
     def graficarColaPrioridad(self):
         text = str(self.productos.currentText())
         product = self._productos.obtener(text)
+        if product is None:
+            self._mostrarError("Seleccion un producto")
+            return
         elaboracion = product.valor.obtener('elaboracion')
         paso = elaboracion.valor
         filtro_lineas = re.compile(r'L\d+p?')
