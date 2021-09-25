@@ -19,10 +19,10 @@ class Matriz:
             cabecera.abajo = nodo
             nodo.arriba = inicio
         else:
-            while inicio.abajo is not None:
-                inicio = inicio.abajo
-            inicio.abajo = nodo
-            nodo.arriba = inicio
+            while inicio.siguiente is not None:
+                inicio = inicio.siguiente
+            inicio.siguiente = nodo
+            nodo.atras = inicio
 
     def _insertColumna(self, y, nodo):
         cabecera = self._columnas.obtener(y)
@@ -36,6 +36,9 @@ class Matriz:
             inicio.abajo = nodo
             nodo.arriba = inicio
 
+    def obtener(self, x, y):
+        return self._obtener(x, y)
+
     def _obtener(self, x, y):
         cabecera = self._filas.obtener(x)
         if cabecera is None:
@@ -48,7 +51,7 @@ class Matriz:
         while inicio is not None:
             if inicio.x is x and inicio.y is y:
                 return inicio
-            inicio = inicio.abajo
+            inicio = inicio.siguiente
 
         return None
 

@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout,
     QListWidget, QFileDialog, QTableWidget
 
 # Subclass QMainWindow to customize your application's main window
+from TDA.Cola import Cola
 from TDA.Matriz import Matriz
 from XML.Lector import Lector
 
@@ -95,16 +96,89 @@ class MainWindow(QMainWindow):
     def _parseElaboracionAGUI(self, elaboracion):
         paso = elaboracion.valor
         filtro_lineas = re.compile(r'L\d+p?')
-        lineas = filtro_lineas.findall(paso)
+        lineas = Cola()
+        lineas.llenar(filtro_lineas.findall(paso))
 
         filtro_componentes = re.compile(r'C\d+p?')
-        componentes = filtro_componentes.findall(paso)
+        componentes = Cola()
+        componentes.llenar(filtro_componentes.findall(paso))
 
-        self.componentes.addItems(componentes)
+        cabeza = componentes.obtenerInicio()
+        while cabeza is not None:
+            self.componentes.addItem(cabeza.valor)
+            cabeza = cabeza.siguiente
 
-    def _llenarMatriz(self, elaboracion):
+        self._llenarMatriz(lineas, componentes)
+
+    def _llenarMatriz(self, lineas, componentes):
         # for item in elaboracion:
-        pass
+        linea = lineas.obtenerInicio()
+        componente = componentes.obtenerInicio()
+
+        while linea is not None:
+            x = linea.valor.replace("L", "")
+            x = int(x.replace("p", "")) - 1
+            y = componente.valor.replace("C", "")
+            y = int(y.replace("p", "")) - 1
+
+            inicio = 0
+            # Donde esta ahorita? como saber cual fue el ultimo componente visitado? en que lugar esta cada linea?
+            for i in range(inicio, y + 1):
+                #     check if move can be made. Hay ensamble en este fila?
+                print("buscando ",x, i)
+                temp = self._matriz.obtener(0, i)
+                # temp = nodo.abajo
+                esta_ensamblando = False
+                while temp is not None:
+                    if 'Ensamblando' in temp.valor:
+                        esta_ensamblando = True
+                        break
+                    temp = temp.siguiente
+
+                if esta_ensamblando is True:
+                    #     si si hay ensamble dejar como no hacer nada
+                    self._matriz.insertar(x, i, 'No hacer nada')
+                else:
+                    #     si no hay ensamble proceder al siguiente movimiento
+                    self._matriz.insertar(x, i, 'Mover brazo – componente ' + str(i + 1))
+
+            linea = linea.siguiente
+            componente = componente.siguiente
+
+            i = y
+            while True:
+                # verificar si se puede ensamblar
+                temp = self._matriz.obtener(0, i)
+                # temp = nodo.abajo
+                esta_vacio = True
+                while temp is not None:
+                    if 'No hacer nada' != temp.valor:
+                        esta_vacio = False
+                        break
+                    temp = temp.siguiente
+
+                if esta_vacio and self._matriz.obtener(x, i) is None:
+                    self._matriz.insertar(x, i, 'Ensamblar componente ' + str(y + 1))
+                    temp = self._matriz.obtener(0, i)
+                    if temp is None:
+                        self._matriz.insertar(0, i, 'No hacer nada')
+
+                    temp = self._matriz.obtener(0, i)
+                    j = 0
+                    while temp is not None:
+                        if j != x:
+                            self._matriz.insertar(j, i, 'No hacer nada')
+                        j += 1
+                        temp = temp.siguiente
+                    break
+                else:
+                    self._matriz.insertar(x, i, 'No hacer nada')
+
+                i += 1
+
+            self._matriz.imprimir()
+        print("**************************")
+        self._matriz.imprimir()
 
 
 class GenerarGUI:

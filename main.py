@@ -39,4 +39,5 @@ def testMatrix():
 
 if __name__ == '__main__':
     GenerarGUI()
+    # testMatrix()
 

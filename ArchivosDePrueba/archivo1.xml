@@ -8,7 +8,7 @@
                 1
             </Numero>
             <CantidadComponentes>
-                1
+                2
             </CantidadComponentes>
             <TiempoEnsamblaje>
                1
@@ -25,28 +25,6 @@
                1
             </TiempoEnsamblaje>
         </LineaProduccion>
-        <LineaProduccion>
-            <Numero>
-               3
-            </Numero>
-            <CantidadComponentes>
-                3
-            </CantidadComponentes>
-            <TiempoEnsamblaje>
-               3
-            </TiempoEnsamblaje>
-        </LineaProduccion>
-        <LineaProduccion>
-            <Numero>
-               4
-            </Numero>
-            <CantidadComponentes>
-                4
-            </CantidadComponentes>
-            <TiempoEnsamblaje>
-               4
-            </TiempoEnsamblaje>
-        </LineaProduccion>
     </ListadoLineasProduccion>
     <ListadoProductos>
         <Producto>
@@ -54,7 +32,7 @@
                 Crazy iphone
             </nombre>
             <elaboracion>
-                L1pC1p L2pC2p L3pC3p
+                L1C2 L2C1 L2C2 L1C4
             </elaboracion>
         </Producto>
     </ListadoProductos>

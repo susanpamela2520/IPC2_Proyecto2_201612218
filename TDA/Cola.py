@@ -20,3 +20,8 @@ class Cola(MetodosCompartidos):
     def obtenerInicio(self):
         return self._inicio
 
+    def llenar(self, desde):
+        for item in desde:
+            self.push(item)
+
+
