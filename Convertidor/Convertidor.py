@@ -11,17 +11,27 @@ class Convertidor:
         # for item in elaboracion:
         linea = lineas.obtenerInicio()
         componente = componentes.obtenerInicio()
-
+        # lineas.graficar()
         while linea is not None:
             x = linea.valor.replace("L", "")
             x = int(x.replace("p", "")) - 1
             y = componente.valor.replace("C", "")
             y = int(y.replace("p", "")) - 1
-
+            print('movimiento ', str(linea.valor), str(componente.valor))
             ultimo_componente = self._buscarUltimoComponente(x, y)
+            direccion = 1
+            if ultimo_componente > 0 and  y < ultimo_componente:
+                direccion = -1
+
             inicio = self._buscarPosicionDeLinea(x, y)
+            if direccion == 1:
+                limite_superior = inicio + y + 1 - ultimo_componente
+            elif direccion == -1:
+                limite_superior = ultimo_componente - y + inicio - 1
+
             # Donde esta ahorita? como saber cual fue el ultimo componente visitado? en que lugar esta cada linea?
-            for i in range(inicio, inicio + y + 1 - ultimo_componente):
+            i = inicio
+            while i < limite_superior:
                 #     check if move can be made. Hay ensamble en este fila?
                 print("buscando ",x, i)
                 temp = self._matriz.obtener(0, i)
@@ -38,9 +48,13 @@ class Convertidor:
                     self._matriz.insertar(x, i, 'No hacer nada')
                 else:
                     #     si no hay ensamble proceder al siguiente movimiento
-                    componente_int = ultimo_componente + i - inicio + 1
-                    self._matriz.insertar(x, i, 'Mover brazo – componente ' + str(componente_int))
+                    componente_int = self._buscarUltimoComponente(x, i) + direccion
+                    if self._matriz.obtener(x, i) is None:
+                        self._matriz.insertar(x, i, 'Mover brazo – componente ' + str(componente_int))
+                    else:
+                        limite_superior += 1
 
+                i += 1
             linea = linea.siguiente
             componente = componente.siguiente
 
@@ -110,7 +124,8 @@ class Convertidor:
             return i
 
         while temp is not None:
-            temp = temp.siguiente
+
+            temp = self._matriz.obtener(x, i)
             if temp is not None:
                 i += 1
 

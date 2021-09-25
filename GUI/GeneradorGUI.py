@@ -4,7 +4,7 @@ import re
 
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout, QWidget, QLabel, QComboBox, \
-    QListWidget, QFileDialog, QTableWidget
+    QListWidget, QFileDialog, QTableWidget, QTableWidgetItem, QHeaderView
 
 # Subclass QMainWindow to customize your application's main window
 from Convertidor.Convertidor import Convertidor
@@ -41,8 +41,6 @@ class MainWindow(QMainWindow):
         # self.componentes.addItems(["One", "Two", "Three"])
 
         self.tableWidget = QTableWidget()
-        self.tableWidget.setRowCount(4)
-        self.tableWidget.setColumnCount(2)
         self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
 
         layout.addWidget(label, 1, 0)
@@ -60,8 +58,9 @@ class MainWindow(QMainWindow):
         # Set the central widget of the Window. Widget will expand
         # to take up all the space in the window by default.
         self.setCentralWidget(widget)
+        # self.showMaximized()
 
-        # self.setFixedSize(QSize(400, 300))
+        # self.setFixedSize(QSize(900, 300))
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -111,9 +110,29 @@ class MainWindow(QMainWindow):
 
         convertidor = Convertidor()
         self._matriz = convertidor.llenarMatriz(lineas, componentes)
+        self._dibujarMatriz()
 
+    def _dibujarMatriz(self):
+        filas = self._matriz.obtenerNumeroFilas()
+        columnas = self._matriz.obtenerNumeroColumnas()
+        self.tableWidget.setRowCount(columnas)
+        self.tableWidget.setColumnCount(filas)
+        # self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
 
+        for j in range(0, columnas):
+            for i in range(0, filas):
+                nodo = self._matriz.obtener(i, j)
+                if nodo is None:
+                    label = QTableWidgetItem("No hacer nada")
+                else:
+                    label = QTableWidgetItem(str(nodo.valor))
 
+                print('insertart ',i,j)
+                self.tableWidget.setItem(j, i, label)
+
+        header = self.tableWidget.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
 
 class GenerarGUI:
     def __init__(self):

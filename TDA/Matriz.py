@@ -55,6 +55,12 @@ class Matriz:
 
         return None
 
+    def obtenerNumeroFilas(self):
+        return self._filas.size()
+
+    def obtenerNumeroColumnas(self):
+        return self._columnas.size()
+
     def imprimir(self):
         i = self._filas.size()
         j = self._columnas.size()
