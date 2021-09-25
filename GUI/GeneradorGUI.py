@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout,
 # Subclass QMainWindow to customize your application's main window
 from Convertidor.Convertidor import Convertidor
 from TDA.Cola import Cola
+from TDA.Diccionario import Diccionario
 from TDA.Matriz import Matriz
 from XML.Lector import Lector
 
@@ -16,10 +17,11 @@ from XML.Lector import Lector
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self._draw()
+        self._dibujar()
         self._matriz = Matriz()
+        self._productos = Diccionario()
 
-    def _draw(self):
+    def _dibujar(self):
         self.setWindowTitle("IPC2")
 
         layout = QGridLayout()
@@ -36,6 +38,12 @@ class MainWindow(QMainWindow):
         self.productos = QComboBox()
         # self.productos.addItems(["One", "Two", "Three"])
 
+        button3 = QPushButton("Iniciar")
+        button3.clicked.connect(self.iniciarSimulacion)
+
+        button4 = QPushButton("Graficar")
+        button4.clicked.connect(self.graficarColaPrioridad)
+
         label4 = QLabel("Componentes")
         self.componentes = QListWidget()
         # self.componentes.addItems(["One", "Two", "Three"])
@@ -48,9 +56,11 @@ class MainWindow(QMainWindow):
         layout.addWidget(button2, 1, 2)
         layout.addWidget(label3, 2, 0)
         layout.addWidget(self.productos, 2, 1)
-        layout.addWidget(label4, 3, 0)
-        layout.addWidget(self.componentes, 3, 1)
-        layout.addWidget(self.tableWidget, 3, 2)
+        layout.addWidget(button3, 3, 1)
+        layout.addWidget(button4, 3, 2)
+        layout.addWidget(label4, 4, 0)
+        layout.addWidget(self.componentes, 4, 1)
+        layout.addWidget(self.tableWidget, 4, 2)
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -61,6 +71,35 @@ class MainWindow(QMainWindow):
         # self.showMaximized()
 
         # self.setFixedSize(QSize(900, 300))
+
+    def iniciarSimulacion(self):
+        text = str(self.productos.currentText())
+        product = self._productos.obtener(text)
+        self._parseElaboracionAGUI(product.valor.obtener('elaboracion'))
+
+    def graficarColaPrioridad(self):
+        text = str(self.productos.currentText())
+        product = self._productos.obtener(text)
+        elaboracion = product.valor.obtener('elaboracion')
+        paso = elaboracion.valor
+        filtro_lineas = re.compile(r'L\d+p?')
+        lineas = Cola()
+        lineas.llenar(filtro_lineas.findall(paso))
+
+        filtro_componentes = re.compile(r'C\d+p?')
+        componentes = Cola()
+        componentes.llenar(filtro_componentes.findall(paso))
+
+        paraGraficar = Cola()
+        linea = lineas.obtenerInicio()
+        componente = componentes.obtenerInicio()
+        while linea is not None:
+            paraGraficar.push(linea.valor + componente.valor)
+            linea = linea.siguiente
+            componente = componente.siguiente
+
+
+        paraGraficar.graficar()
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -83,14 +122,15 @@ class MainWindow(QMainWindow):
     def leerArchivos(self, file, file_type):
         lector = Lector(file, file_type)
         data = lector.leer()
-        # print(data)
-        self.llenarGUI(data.obtener('products'))
+        if file_type == Lector.TYPE_MAQUINA:
+            self.llenarGUI(data.obtener('products'))
 
     def llenarGUI(self, productos):
         product = productos.valor.obtenerInicio()
+        self.productos.clear()
         while product is not None:
             self.productos.addItem(product.valor.obtener('nombre').valor)
-            self._parseElaboracionAGUI(product.valor.obtener('elaboracion'))
+            self._productos.insertar(product.valor.obtener('nombre').valor, product.valor)
             product = product.siguiente
 
     def _parseElaboracionAGUI(self, elaboracion):
@@ -127,12 +167,12 @@ class MainWindow(QMainWindow):
                 else:
                     label = QTableWidgetItem(str(nodo.valor))
 
-                print('insertart ',i,j)
                 self.tableWidget.setItem(j, i, label)
 
         header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QHeaderView.Stretch)
+
 
 class GenerarGUI:
     def __init__(self):

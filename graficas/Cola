@@ -2,11 +2,9 @@
 digraph {
 	rankdir=LR
 	node [shape=box]
-	0 [label=L1]
+	0 [label=L3C2]
 	0 -> 1
-	1 [label=L2]
+	1 [label=L4C1]
 	1 -> 2
-	2 [label=L2]
-	2 -> 3
-	3 [label=L1]
+	2 [label=L2C2]
 }
