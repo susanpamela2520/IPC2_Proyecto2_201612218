@@ -1,6 +1,6 @@
 import graphviz
 
-class MetodosCompartidos:
+class MetodosCompartidos:   #Todo referenta a la cola, como grafica, el tamaño, si esta llena o vacia
     def estaVacia(self):
         return self._inicio is None
 
@@ -21,7 +21,7 @@ class MetodosCompartidos:
         self._inicio = self._inicio.siguiente
         return temp.valor
 
-    def graficar(self):
+    def graficar(self):    #grafica para mostrar con cola.graficar
         print(self.__class__.__name__)
         dot = graphviz.Digraph(comment=self.__class__.__name__, format='png')
         dot.attr(rankdir='LR')

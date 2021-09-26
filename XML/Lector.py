@@ -10,22 +10,22 @@ class Lector:
     TYPE_MAQUINA = "maquina"
     TYPE_SIMULACION = "simulacion"
 
-    def __init__(self, ruta, type):
+    def __init__(self, ruta, type):   #Recibe ruta y tipo
         self.type = type
         self.ruta = ruta
 
-    def leer(self):
+    def leer(self):                    #Lee archivo y Retorna objeto diccionario 
         if self.type == self.TYPE_MAQUINA:
             return self._parsearMaquina(self.ruta)
         elif self.type == self.TYPE_SIMULACION:
             return self._parsearSimulacion(self.ruta)
 
-    def _parsearMaquina(self, ruta):
+    def _parsearMaquina(self, ruta):   #Lee archivo tipo maquina para poder navergar en el diccionario
         # use the parse() function to load and parse an XML file
         data = Diccionario()
         doc = xml.dom.minidom.parse(ruta)
 
-        root = doc.getElementsByTagName("Maquina")[0]
+        root = doc.getElementsByTagName("Maquina")[0]  #Lecturas de palabras claves
 
         cantidadLineasProduccion = root.getElementsByTagName("CantidadLineasProduccion")
         data.insertar('cantidad_lineas_produccion', int(strip(cantidadLineasProduccion[0].firstChild.nodeValue)))
@@ -34,9 +34,9 @@ class Lector:
         listadoLineasProduccion = root.getElementsByTagName("ListadoLineasProduccion")[0]
         lineasProduccion = listadoLineasProduccion.getElementsByTagName("LineaProduccion")
 
-        lineas = Cola()
+        lineas = Cola()   #Creacion de cola para la lectura de archivo
         for linea in lineasProduccion:
-            linea_produccion = Diccionario()
+            linea_produccion = Diccionario() #Para obtener los datos del archivo se va recorriendo con el for
             numero = linea.getElementsByTagName("Numero")
             linea_produccion.insertar('numero', int(strip(numero[0].firstChild.nodeValue)))
 
@@ -52,7 +52,7 @@ class Lector:
         listadoProductos = root.getElementsByTagName("ListadoProductos")[0]
         productos = listadoProductos.getElementsByTagName("Producto")
 
-        list_productos = Cola()
+        list_productos = Cola()  #Se repite la misma historia jajaja
 
         for producto in productos:
             product = Diccionario()
@@ -68,5 +68,7 @@ class Lector:
         data.insertar('products', list_productos)
         return data
 
+            #inserta el nodo como valor para luego recorrero 
+            
     def _parsearSimulacion(self, ruta):
         pass

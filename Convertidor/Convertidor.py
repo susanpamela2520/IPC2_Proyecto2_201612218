@@ -21,7 +21,7 @@ class Convertidor:
             ultimo_componente = self._buscarUltimoComponente(x, y)
             direccion = 1
             if ultimo_componente > 0 and  y < ultimo_componente:
-                direccion = -1
+                direccion = -1              #Ve la posicion de los componentes para ir adelante o atras en la linea de ensambleje 
 
             inicio = self._buscarPosicionDeLinea(x, y)
             if direccion == 1:
@@ -31,14 +31,14 @@ class Convertidor:
 
             # Donde esta ahorita? como saber cual fue el ultimo componente visitado? en que lugar esta cada linea?
             i = inicio
-            while i < limite_superior:
+            while i < limite_superior: #determina la cantidad de posiciones que se mueve el brazo
                 #     check if move can be made. Hay ensamble en este fila?
                 print("buscando ",x, i)
                 temp = self._matriz.obtener(0, i)
                 # temp = nodo.abajo
                 esta_ensamblando = False
                 while temp is not None:
-                    if 'Ensamblando' in temp.valor:
+                    if 'Ensamblando' in temp.valor:         #Se recorre horizontalmente si hay un emsambleje o no
                         esta_ensamblando = True
                         break
                     temp = temp.siguiente
@@ -52,11 +52,11 @@ class Convertidor:
                     if self._matriz.obtener(x, i) is None:
                         self._matriz.insertar(x, i, 'Mover brazo – componente ' + str(componente_int))
                     else:
-                        limite_superior += 1
+                        limite_superior += 1   #se incrementa el limite superior para verficar que no haya nada y utilizar el siguiente
 
                 i += 1
-            linea = linea.siguiente
-            componente = componente.siguiente
+            linea = linea.siguiente     
+            componente = componente.siguiente #Linea siguiente para trabajar
 
             self._buscarLugarParaEnsamblar(x, y)
 
@@ -98,7 +98,7 @@ class Convertidor:
 
         self._matriz.imprimir()
 
-    def _buscarUltimoComponente(self, x, y):
+    def _buscarUltimoComponente(self, x, y):  #Recorre verticalmente para saber cual es el sigueinte que toca
         i = 0
         temp = self._matriz.obtener(x, i)
         if temp is None:

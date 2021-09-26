@@ -10,10 +10,10 @@ class Diccionario:
     def __init__(self):
         self._inicio = None
 
-    def obtener(self, texto):
+    def obtener(self, texto):    #Recorre toda la lista
         temp = self._inicio
 
-        while temp is not None:
+        while temp is not None:             #No existe retorna none
             if temp.etiqueta == texto:
                 return temp
             else:
@@ -21,12 +21,12 @@ class Diccionario:
 
         return None
 
-    def insertar(self, etiqueta, valor):
+    def insertar(self, etiqueta, valor):   #Inserta valores en los espacios del diccionario 
         temp = self.obtener(etiqueta)
         if temp is not None:
-            temp.valor = valor
+            temp.valor = valor             #Verifica el valor del espacio 
 
-        nuevo = CeldaDiccionario(etiqueta, valor)
+        nuevo = CeldaDiccionario(etiqueta, valor)         #crea una nueva celda y la asigna al final
         if self._inicio is None:
             self._inicio = nuevo
             return
@@ -37,3 +37,7 @@ class Diccionario:
 
         temp.siguiente = nuevo
         nuevo.anterior = temp
+
+
+#Difencia de cola y diccionario 
+#la cola no verifica y el diccionario si, se necesita verificacion por las etiquetas

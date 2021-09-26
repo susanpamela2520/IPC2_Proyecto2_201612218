@@ -2,7 +2,7 @@ from TDA.Celda import Celda
 from TDA.MetodosCompartidos import MetodosCompartidos
 
 
-class Pila(MetodosCompartidos):
+class Pila(MetodosCompartidos):   
     def __init__(self):
         self._inicio = None
 

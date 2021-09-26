@@ -14,14 +14,14 @@ from TDA.Matriz import Matriz
 from XML.Lector import Lector
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow):   #Hereda de QMainWindow 
     def __init__(self):
         super().__init__()
         self._dibujar()
         self._matriz = Matriz()
         self._productos = Diccionario()
 
-    def _dibujar(self):
+    def _dibujar(self):             #Agrego todos los botenes de la interfaz
         self.setWindowTitle("IPC2")
 
         layout = QGridLayout()
@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
         # self.componentes.addItems(["One", "Two", "Three"])
 
         self.tableWidget = QTableWidget()
-        self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)   #No se puede editar, solo es lectura
 
         layout.addWidget(label, 1, 0)
         layout.addWidget(button, 1, 1)
@@ -72,7 +72,7 @@ class MainWindow(QMainWindow):
 
         # self.setFixedSize(QSize(900, 300))
 
-    def _mostrarError(self, mensaje):
+    def _mostrarError(self, mensaje):     #Mensaje de Alerta 
         dlg = QMessageBox(self)
         dlg.setWindowTitle("Error")
         dlg.setText(mensaje)
@@ -87,18 +87,18 @@ class MainWindow(QMainWindow):
         self._parseElaboracionAGUI(product.valor.obtener('elaboracion'))
 
     def graficarColaPrioridad(self):
-        text = str(self.productos.currentText())
-        product = self._productos.obtener(text)
+        text = str(self.productos.currentText())   #Se obtiene producto seleccionado de combo box
+        product = self._productos.obtener(text)    #Label que tiene el combo box
         if product is None:
             self._mostrarError("Seleccion un producto")
             return
         elaboracion = product.valor.obtener('elaboracion')
         paso = elaboracion.valor
-        filtro_lineas = re.compile(r'L\d+p?')
+        filtro_lineas = re.compile(r'L\d+p?') #uso de regex para lineas(expresion regular)
         lineas = Cola()
         lineas.llenar(filtro_lineas.findall(paso))
 
-        filtro_componentes = re.compile(r'C\d+p?')
+        filtro_componentes = re.compile(r'C\d+p?') #uso de regex para componentes
         componentes = Cola()
         componentes.llenar(filtro_componentes.findall(paso))
 
@@ -106,12 +106,12 @@ class MainWindow(QMainWindow):
         linea = lineas.obtenerInicio()
         componente = componentes.obtenerInicio()
         while linea is not None:
-            paraGraficar.push(linea.valor + componente.valor)
+            paraGraficar.push(linea.valor + componente.valor)    #Union de linea y componente en una cola temporal
             linea = linea.siguiente
             componente = componente.siguiente
 
 
-        paraGraficar.graficar()
+        paraGraficar.graficar()  
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -131,21 +131,21 @@ class MainWindow(QMainWindow):
             for file in files:
                 self.leerArchivos(file, Lector.TYPE_SIMULACION)
 
-    def leerArchivos(self, file, file_type):
+    def leerArchivos(self, file, file_type):   #lector XML
         lector = Lector(file, file_type)
         data = lector.leer()
-        if file_type == Lector.TYPE_MAQUINA:
+        if file_type == Lector.TYPE_MAQUINA:        #si viene de maquian vamos a llenar GUI
             self.llenarGUI(data.obtener('products'))
 
-    def llenarGUI(self, productos):
+    def llenarGUI(self, productos):         #Se utiliza el diccionario
         product = productos.valor.obtenerInicio()
         self.productos.clear()
         while product is not None:
-            self.productos.addItem(product.valor.obtener('nombre').valor)
+            self.productos.addItem(product.valor.obtener('nombre').valor)    #Se llena el combo box de productos del archivo de entrada
             self._productos.insertar(product.valor.obtener('nombre').valor, product.valor)
             product = product.siguiente
 
-    def _parseElaboracionAGUI(self, elaboracion):
+    def _parseElaboracionAGUI(self, elaboracion):   #Metodo para la elaboracion de la simulacion 
         paso = elaboracion.valor
         filtro_lineas = re.compile(r'L\d+p?')
         lineas = Cola()
@@ -161,10 +161,10 @@ class MainWindow(QMainWindow):
             cabeza = cabeza.siguiente
 
         convertidor = Convertidor()
-        self._matriz = convertidor.llenarMatriz(lineas, componentes)
+        self._matriz = convertidor.llenarMatriz(lineas, componentes)    #se llena la matriz con el metodo llenarMatriz de Convertidor
         self._dibujarMatriz()
 
-    def _dibujarMatriz(self):
+    def _dibujarMatriz(self):    #Llena la tabla en el grafico (tipo excel)
         filas = self._matriz.obtenerNumeroFilas()
         columnas = self._matriz.obtenerNumeroColumnas()
         self.tableWidget.setRowCount(columnas)
