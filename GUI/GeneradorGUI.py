@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+import webbrowser
 
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout, QWidget, QLabel, QComboBox, \
@@ -44,6 +45,10 @@ class MainWindow(QMainWindow):   #Hereda de QMainWindow
         button4 = QPushButton("Graficar")
         button4.clicked.connect(self.graficarColaPrioridad)
 
+        button5 = QPushButton("Reporte HTML")
+        button5.clicked.connect(reportehtml)
+
+
         label4 = QLabel("Componentes")
         self.componentes = QListWidget()
         # self.componentes.addItems(["One", "Two", "Three"])
@@ -55,7 +60,8 @@ class MainWindow(QMainWindow):   #Hereda de QMainWindow
         layout.addWidget(button, 1, 1)
         layout.addWidget(button2, 1, 2)
         layout.addWidget(label3, 2, 0)
-        layout.addWidget(self.productos, 2, 1)
+        layout.addWidget(self.productos, 2, 1)     #botton 5 para html 2,2
+        layout.addWidget(button5, 2,2)
         layout.addWidget(button3, 3, 1)
         layout.addWidget(button4, 3, 2)
         layout.addWidget(label4, 4, 0)
@@ -172,7 +178,7 @@ class MainWindow(QMainWindow):   #Hereda de QMainWindow
         # self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
 
         for j in range(0, columnas):
-            for i in range(0, filas):
+            for i in range(0, filas):                                       #for para reporte html 
                 nodo = self._matriz.obtener(i, j)
                 if nodo is None:
                     label = QTableWidgetItem("No hacer nada")
@@ -184,6 +190,24 @@ class MainWindow(QMainWindow):   #Hereda de QMainWindow
         header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QHeaderView.Stretch)
+
+
+def reportehtml():
+
+    f = open('Simuladorlineadeensamblaje.html','w')
+    iniciohtml = '<!DOCTYPE html>\n'
+    iniciohtml += '<body>\n' 
+    iniciohtml += '<h1 style="background-color:powderblue">Simulador Linea de Ensamblaje</h1> \n'
+    iniciohtml += 'Reporte linea de ensamblaje: '
+    
+
+
+    iniciohtml += '</body>'    
+    iniciohtml += '</html>'
+
+    f.write(iniciohtml)
+    f.close()
+    webbrowser.open_new_tab('Simuladorlineadeensamblaje.html')
 
 
 class GenerarGUI:

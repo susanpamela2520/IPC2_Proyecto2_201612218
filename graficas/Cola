@@ -2,9 +2,29 @@
 digraph {
 	rankdir=LR
 	node [shape=box]
-	0 [label=L3C2]
+	0 [label=L2pC5]
 	0 -> 1
-	1 [label=L4C1]
+	1 [label=L10pC6]
 	1 -> 2
-	2 [label=L2C2]
+	2 [label=L6pC15]
+	2 -> 3
+	3 [label=L4pC22]
+	3 -> 4
+	4 [label=L11pC3]
+	4 -> 5
+	5 [label=L5pC8]
+	5 -> 6
+	6 [label=L13pC1]
+	6 -> 7
+	7 [label=L8pC9]
+	7 -> 8
+	8 [label=L5pC5]
+	8 -> 9
+	9 [label=L2pC5]
+	9 -> 10
+	10 [label=L13pC14]
+	10 -> 11
+	11 [label=L12pC22]
+	11 -> 12
+	12 [label=L13pC16]
 }
